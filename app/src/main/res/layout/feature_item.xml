@@ -12,7 +12,7 @@
 
     <ImageButton
         android:layout_width="16dp"
-        android:layout_height="16-++++++++++++++++++++dp"
+        android:layout_height="16dp"
         android:background="@drawable/ic_check_circle_black_24dp"
         android:id="@+id/imageButton"
         android:onClick="onClick"
@@ -23,6 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/featureName"
+        android:fontFamily="sans-serif"
         android:textColor="@color/gray"
         android:text="Feature"
         />
