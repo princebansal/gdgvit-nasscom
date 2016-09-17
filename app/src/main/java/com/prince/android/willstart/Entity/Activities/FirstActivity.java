@@ -31,7 +31,7 @@ public class FirstActivity extends AppCompatActivity implements ImageButton.OnCl
     @Override
     public void onClick(View view) {
 
-            
+
 
 
     }
