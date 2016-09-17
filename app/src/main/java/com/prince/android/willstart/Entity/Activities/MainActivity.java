@@ -191,9 +191,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     @Override
-    public void onRequestCompleted(int code, List<SearchResult> searchResultList) {
+    public void onRequestCompleted(int code, Object searchResultList) {
         setProgress(false);
-        this.searchResultList=searchResultList.get(0).getCompanyList();
+        List<SearchResult> list=(List<SearchResult>)searchResultList;
+        this.searchResultList=list.get(0).getCompanyList();
         setData();
     }
 
