@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">WillStart</string>
     <string name="search_hint" />
+    <string name="keywordHint">Keyword</string>
 </resources>
