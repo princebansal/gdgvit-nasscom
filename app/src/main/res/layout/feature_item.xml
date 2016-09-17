@@ -15,8 +15,7 @@
         android:layout_height="16dp"
         android:background="@drawable/ic_check_circle_black_24dp"
         android:id="@+id/imageButton"
-        android:onClick="onClick"
-        />
+        android:onClick="onClick" />
 
     <TextView
         android:paddingLeft="10dp"
