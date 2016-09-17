@@ -12,9 +12,9 @@ public class Company {
     private String name;
     @SerializedName("pic_url")
     private String picUrl;
-    @SerializedName("services")
+    @SerializedName("services_available")
     private List<String> servicesOffered;
-    @SerializedName("services_not")
+    @SerializedName("services_not_available")
     private List<String> servicesNotOffered;
 
     public String getName() {

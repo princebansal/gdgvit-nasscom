@@ -3,10 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_first"
     android:gravity="center"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@color/colorPrimary"
     tools:context="com.prince.android.willstart.Entity.Activities.FirstActivity">
 
 
@@ -23,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/featureName"
-        android:textColor="@android:color/white"
+        android:textColor="@color/gray"
         android:text="Feature"
         />
 

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -19,11 +20,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.prince.android.willstart.Entity.Instances.Company;
-import com.prince.android.willstart.Entity.Instances.SearchResult;
 import com.prince.android.willstart.R;
 
 import java.util.ArrayList;
@@ -74,13 +73,18 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private void setData() {
         List<String> imageUrls=new ArrayList<>();
-        imageUrls.add("http://www.mobygames.com/images/i/22/36/1121436.png");
+        List<String> services=new ArrayList<>();
+        services.add("Online Booking");
+        services.add("Mobile App");
+        services.add("Home Delivery");
+        services.add("Menu HandPicking");
+        imageUrls.add("https://pbs.twimg.com/profile_images/762369348300251136/5Obhonwa.jpg");
         imageUrls.add("http://www.logospike.com/wp-content/uploads/2015/11/Company_Logos_01.jpg");
         imageUrls.add("https://www.seeklogo.net/wp-content/uploads/2014/12/twitter-logo-vector-download.jpg");
         imageUrls.add("http://www.mobygames.com/images/i/26/09/650109.png");
         imageUrls.add("http://www.jamesgood.co.uk/sites/default/files/Logo-Blog_58.png");
         List<String> names=new ArrayList<>();
-        names.add("NASA");
+        names.add("Google");
         names.add("Dell");
         names.add("Twitter");
         names.add("EA Sports");
@@ -90,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             Company c=new Company();
             c.setPicUrl(imageUrls.get(i));
             c.setName(names.get(i));
+            c.setServicesOffered(services);
             list.add(c);
         }
         searchResultList=list;
@@ -115,7 +120,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 searchManager.getSearchableInfo(getComponentName()));
         searchView.setOnQueryTextListener(this);
         if(searchView!=null&&keyword!=null){
-            searchView.setQuery(keyword,true);
+            searchView.setQuery(null,false);
+            searchView.setQuery(keyword,false);
         }
 
         return true;
@@ -172,6 +178,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         public void onBindViewHolder(SearchViewHolder holder, int position) {
             holder.companyName.setText(searchResultList.get(position).getName());
             Glide.with(context).load(searchResultList.get(position).getPicUrl()).asBitmap().into(holder.companyLogo);
+            if(searchResultList.get(position).getServicesOffered()==null){
+                Log.i(TAG, "onBindViewHolder: null");
+            }
+            holder.servicesRecycler.setAdapter(new ServicesAdapter(context,searchResultList.get(position).getServicesOffered()));
         }
 
         @Override
@@ -190,6 +200,46 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 companyLogo=(CircleImageView)itemView.findViewById(R.id.companyLogo);
                 companyName=(TextView)itemView.findViewById(R.id.companyName);
                 servicesRecycler=(RecyclerView)itemView.findViewById(R.id.recViewFeatures);
+                servicesRecycler.setLayoutManager(new GridLayoutManager(context,2));
+            }
+        }
+    }
+    public class ServicesAdapter extends RecyclerView.Adapter<ServicesAdapter.ServiceViewHolder>{
+
+
+        private final Context context;
+        private List<String> featuresList;
+
+        public ServicesAdapter(Context context,List<String> list) {
+            this.context=context;
+            featuresList=list;
+        }
+
+        @Override
+        public ServicesAdapter.ServiceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view=getLayoutInflater().inflate(R.layout.feature_item,parent,false);
+            ServiceViewHolder serviceViewHolder=new ServiceViewHolder(view);
+
+            return serviceViewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(ServiceViewHolder holder, int position) {
+            holder.featureName.setText(featuresList.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return featuresList.size();
+        }
+
+        public class ServiceViewHolder extends RecyclerView.ViewHolder{
+
+            private TextView featureName;
+
+            public ServiceViewHolder(View itemView) {
+                super(itemView);
+                featureName=(TextView)itemView.findViewById(R.id.featureName);
             }
         }
     }
