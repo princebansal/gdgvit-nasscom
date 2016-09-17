@@ -14,7 +14,6 @@
         <activity
             android:name=".Entity.Activities.MainActivity"
             android:label="@string/app_name">
-
             <!--
                 <meta-data
                 android:name="android.app.default_searchable"
@@ -41,16 +40,18 @@
         </activity>
         <activity android:name=".Entity.Activities.FirstActivity">
 
-        </activity>
-        <activity
-            android:name=".Entity.Activities.ServicesInputActivity"
-            android:windowSoftInputMode="adjustResize"></activity>
-        <activity android:name=".Entity.Activities.AlertInfo">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".Entity.Activities.ServicesInputActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:parentActivityName=".Entity.Activities.MainActivity"></activity>
+        <activity android:name=".Entity.Activities.AlertInfo">
 
         </activity>
     </application>
