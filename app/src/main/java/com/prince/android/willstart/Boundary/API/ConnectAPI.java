@@ -20,6 +20,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.prince.android.willstart.Boundary.Manager.DataHandler;
 import com.prince.android.willstart.Entity.Instances.SearchResult;
 
@@ -40,7 +41,7 @@ public class ConnectAPI {
 
 
     //Declared URLs
-    private final String fetchUrl = "https://devblogs.instavoice.com/vb";
+    private final String fetchUrl = "http://54.186.169.29:1337/startups/food";
 
     private AppController appController;
     private ServerAuthenticateListener mServerAuthenticateListener;
@@ -112,37 +113,21 @@ public class ConnectAPI {
     }*/
 
 
-    public void fetchMessages(String keyword)
-    {
+    public void fetchMessages(String keyword) {
 
         mServerAuthenticateListener.onRequestInitiated(COVERSATION_FETCH_CODE);
-        final String data;
-        HashMap<String,Object> registerparams=new HashMap<>();
-        registerparams.put("cmd","fetch_vobolos");
-        registerparams.put("client_os","A");
-        registerparams.put("client_os_ver","6.0");
-        registerparams.put("client_app_ver","vb.01.01.001");
-        registerparams.put("app_secure_key","b2ff398f8db492c19ef89b548b04889c");
-        registerparams.put("user_secure_key",dataHandler.getUserSecureKey());
-        registerparams.put("iv_user_id",Integer.parseInt(dataHandler.getIvUserId()));
-        registerparams.put("sim_serial_num",dataHandler.getSimSerialNumber());
-        data= new Gson().toJson(registerparams);
-        Log.v("data",data);
-
-
-
-        StringRequest postRequest = new StringRequest(Request.Method.POST,fetchUrl,
+        StringRequest postRequest = new StringRequest(Request.Method.GET, fetchUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.v("res called","res");
-                        Log.v("response",response);
-
+                        Log.v("response", response);
                         try {
 
-                                Gson gson=new Gson();
-                                SearchResult searchResult=gson.fromJson(response.toString(),SearchResult.class);
-                                mServerAuthenticateListener.onRequestCompleted(COVERSATION_FETCH_CODE,searchResult);
+                            JSONObject jsonObject = new JSONObject(response);
+                            Gson gson = new Gson();
+                            List<SearchResult> searchResultList = gson.fromJson(jsonObject.get("market").toString(), new TypeToken<List<SearchResult>>() {
+                            }.getType());
+                            mServerAuthenticateListener.onRequestCompleted(COVERSATION_FETCH_CODE, searchResultList);
 
 
                         } catch (Exception e) {
@@ -150,25 +135,15 @@ public class ConnectAPI {
                         }
 
 
-
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                Log.v("err","error");
-                mServerAuthenticateListener.onRequestError(COVERSATION_FETCH_CODE,error.getMessage());
+                Log.v("err", "error");
+                mServerAuthenticateListener.onRequestError(COVERSATION_FETCH_CODE, error.getMessage());
             }
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-
-
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("data",data);
-                return params;
-            }
-        };
+        });
 
         // Adding request to request queue
         RetryPolicy policy = new DefaultRetryPolicy(30000000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -182,7 +157,7 @@ public class ConnectAPI {
             return false;
         }
         try {
-            JSONObject j=new JSONObject(response);
+            JSONObject j = new JSONObject(response);
         } catch (JSONException e) {
             e.printStackTrace();
             return false;
@@ -199,11 +174,10 @@ public class ConnectAPI {
     public interface ServerAuthenticateListener {
         void onRequestInitiated(int code);
 
-        void onRequestCompleted(int code);
+        void onRequestCompleted(int code, List<SearchResult> searchResultList);
 
         void onRequestError(int code, String message);
 
-        void onRequestCompleted(int coversationFetchCode,  SearchResult result);
 
     }
 
