@@ -123,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             searchView.setQuery(null,false);
             searchView.setQuery(keyword,false);
         }
-
         return true;
     }
 
