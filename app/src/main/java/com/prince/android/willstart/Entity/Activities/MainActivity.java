@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private ConnectAPI connectAPI;
     private SearchResultsAdapter adapter;
+    private String mQuery;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -169,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        mQuery=query;
         showMessage(query);
         connectAPI.fetchMessages(query);
         return false;

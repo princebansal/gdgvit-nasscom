@@ -5,4 +5,5 @@ package com.prince.android.willstart.Entity.Instances;
  */
 
 public class SuggestionResult {
+
 }

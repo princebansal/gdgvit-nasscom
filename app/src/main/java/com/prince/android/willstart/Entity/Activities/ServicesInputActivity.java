@@ -5,9 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
@@ -15,19 +19,22 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.prince.android.willstart.Boundary.API.ConnectAPI;
 import com.prince.android.willstart.Entity.Instances.InputView;
 import com.prince.android.willstart.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServicesInputActivity extends AppCompatActivity {
+public class ServicesInputActivity extends AppCompatActivity implements ConnectAPI.ServerAuthenticateListener {
 
     private static final String TAG = SearchResultsActivity.class.getSimpleName();
     private LinearLayout inputContainer;
     private LinearLayout.LayoutParams params;
     private List<InputView> inputViewList;
     private Toolbar toolbar;
+
+    private ConnectAPI connectApi;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +48,7 @@ public class ServicesInputActivity extends AppCompatActivity {
         inputContainer=(LinearLayout)findViewById(R.id.innerLinearLayout);
         inputViewList=new ArrayList<>();
         toolbar=(Toolbar)findViewById(R.id.toolbar);
+        connectApi=new ConnectAPI();
 
     }
 
@@ -49,6 +57,26 @@ public class ServicesInputActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Add Details");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        connectApi.setServerAuthenticateListener(this);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.suggestion_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.done){
+            List<String> phraseList=new ArrayList<>();
+            for(InputView iv:inputViewList){
+                phraseList.add(iv.getInputField().getText().toString());
+            }
+            connectApi.fetchSuggestions(phraseList,"foods");
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void addInputView() {
@@ -61,8 +89,10 @@ public class ServicesInputActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId== EditorInfo.IME_ACTION_NEXT){
                     Log.i(TAG, "onEditorAction: ");
-                    addInputView();
-                    inputView.getInputCheck().setChecked(true);
+                    if(!TextUtils.isEmpty(v.getText().toString())) {
+                        addInputView();
+                        inputView.getInputCheck().setChecked(true);
+                    }
                 }
                 return false;
             }
@@ -80,5 +110,22 @@ public class ServicesInputActivity extends AppCompatActivity {
             }
         });
         inputContainer.addView(v);
+    }
+
+    @Override
+    public void onRequestInitiated(int code) {
+        Log.i(TAG, "onRequestInitiated: ");
+    }
+
+    @Override
+    public void onRequestCompleted(int code, Object searchResultList) {
+        Log.i(TAG, "onRequestCompleted: ");
+        List<String> results=(List<String>)searchResultList;
+        Log.i(TAG, "onRequestCompleted: "+results.toString());
+    }
+
+    @Override
+    public void onRequestError(int code, String message) {
+        Log.i(TAG, "onRequestError: ");
     }
 }

@@ -39,8 +39,7 @@ public class ConnectAPI {
 
     //Declared URLs
     private final String fetchUrl = "http://54.186.169.29:1337/startups/";
-    //TODO To be changed
-    private final String suggestionsUrl="http://54.186.169.29:1337/startups/";
+    private final String suggestionsUrl="http://54.186.169.29:1337/startups/features/";
 
     private AppController appController;
     private ServerAuthenticateListener mServerAuthenticateListener;
@@ -151,19 +150,22 @@ public class ConnectAPI {
         AppController.getInstance().addToRequestQueue(postRequest);
     }
 
-    private void fetchSuggestions(final List<String> servicesList){
-        mServerAuthenticateListener.onRequestInitiated(FETCH_COMPANIES_CODE);
-        StringRequest postRequest = new StringRequest(Request.Method.POST, suggestionsUrl,
+    public void fetchSuggestions(final List<String> servicesList,String category){
+
+        String url=fetchUrl+category;
+        mServerAuthenticateListener.onRequestInitiated(FETCH_SUGGESTIONS_CODE);
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Log.v("response", response);
                         try {
-
+                             JSONObject jsonObject=new JSONObject(response);
                             Gson gson = new Gson();
-                            List<SuggestionResult> suggestionResults = gson.fromJson(response, new TypeToken<List<SuggestionResult>>() {
+                            //List<SuggestionResult> suggestionResults = gson.fromJson(response, new TypeToken<List<SuggestionResult>>() {}.getType());
+                            List<String> suggestionResults = gson.fromJson(jsonObject.get("results").toString(), new TypeToken<List<String>>() {
                             }.getType());
-                            mServerAuthenticateListener.onRequestCompleted(FETCH_COMPANIES_CODE, suggestionResults);
+                            mServerAuthenticateListener.onRequestCompleted(FETCH_SUGGESTIONS_CODE, suggestionResults);
 
 
                         } catch (Exception e) {
@@ -177,7 +179,7 @@ public class ConnectAPI {
             public void onErrorResponse(VolleyError error) {
 
                 Log.v("err", "error");
-                mServerAuthenticateListener.onRequestError(FETCH_COMPANIES_CODE, error.getMessage());
+                mServerAuthenticateListener.onRequestError(FETCH_SUGGESTIONS_CODE, error.getMessage());
             }
         }){
             @Override
