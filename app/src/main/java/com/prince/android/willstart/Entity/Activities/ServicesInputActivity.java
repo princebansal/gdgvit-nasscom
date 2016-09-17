@@ -1,5 +1,6 @@
 package com.prince.android.willstart.Entity.Activities;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ public class ServicesInputActivity extends AppCompatActivity {
     private LinearLayout.LayoutParams params;
     private List<InputView> inputViewList;
     private Toolbar toolbar;
+    private FloatingActionButton fabButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +43,7 @@ public class ServicesInputActivity extends AppCompatActivity {
         inputContainer=(LinearLayout)findViewById(R.id.innerLinearLayout);
         inputViewList=new ArrayList<>();
         toolbar=(Toolbar)findViewById(R.id.toolbar);
+        fabButton=(FloatingActionButton)findViewById(R.id.fabBullet);
 
     }
 
@@ -49,6 +52,14 @@ public class ServicesInputActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Add Details");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        fabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                inputViewList.get(inputViewList.size()-1).getInputCheck().setChecked(true);
+                addInputView();
+            }
+        });
     }
 
     private void addInputView() {
@@ -79,6 +90,7 @@ public class ServicesInputActivity extends AppCompatActivity {
                 }
             }
         });
+        inputViewList.add(inputView);
         inputContainer.addView(v);
     }
 }
