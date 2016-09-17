@@ -5,4 +5,5 @@
 
     <string name="menu_search">Search</string>
     <string name="search_result">Result</string>
+    <string name="keyword_label">keyword</string>
 </resources>

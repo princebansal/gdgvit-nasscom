@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -18,7 +19,11 @@ import com.prince.android.willstart.R;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     private Toolbar toolbar;
+    private SearchManager searchManager;
+    private SearchView searchView;
+    private String keyword;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     private void setInit() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Will Start");
+        if(getIntent().hasExtra("keyword")){
+            keyword=getIntent().getStringExtra("keyword");
+        }
     }
 
     @Override
@@ -45,13 +53,17 @@ public class MainActivity extends AppCompatActivity {
         // Inflate menu to add items to action bar if it is present.
         inflater.inflate(R.menu.menu_main, menu);
         // Associate searchable configuration with the SearchView
-        SearchManager searchManager =
+        searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
+        searchView =
                 (SearchView) menu.findItem(R.id.menu_search).getActionView();
+        searchView.setIconifiedByDefault(false);
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
 
+        if(searchView!=null&&keyword!=null){
+            searchView.setQuery(keyword,false);
+        }
         return true;
     }
 }

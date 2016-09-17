@@ -17,6 +17,7 @@
         android:transitionName="transitionShow"
         android:textAlignment="center"
         android:textSize="40sp"
+        android:hint="@string/keyword_label"
         android:inputType="textNoSuggestions"
         android:textColor="@android:color/white"
         android:fontFamily="sans-serif-condensed"
