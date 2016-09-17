@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -14,6 +15,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.prince.android.willstart.Entity.Instances.SearchResult;
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private SearchView searchView;
     private String keyword;
     private RecyclerView recyclerView;
+    private FloatingActionButton fab;
 
     private List<SearchResult> searchResultList;
 
@@ -46,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private void init() {
         toolbar=(Toolbar)findViewById(R.id.toolbar);
+        fab=(FloatingActionButton)findViewById(R.id.fab);
 
     }
 
@@ -56,6 +61,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             keyword=getIntent().getStringExtra("keyword");
         }
         handleIntent(getIntent());
+
+        Animation hyperspaceJump = AnimationUtils.loadAnimation(this, R.anim.scale);
+        hyperspaceJump.setStartTime(500);
+        fab.startAnimation(hyperspaceJump);
     }
 
     @Override
@@ -90,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         Log.i(TAG, "handleIntent: ");
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            Toast.makeText(this,query,Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(this,query,Toast.LENGTH_SHORT).show();
             Log.i(TAG, "handleIntent: "+query);
             //use the query to search
         }
@@ -103,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void showMessage(String query) {
-        Toast.makeText(this,query,Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this,query,Toast.LENGTH_SHORT).show();
     }
 
     @Override
