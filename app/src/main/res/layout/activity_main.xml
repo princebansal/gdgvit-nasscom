@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:id="@+id/root"
     android:background="@color/win_bg"
     tools:context=".Entity.Activities.MainActivity">
     <android.support.design.widget.AppBarLayout
@@ -34,6 +35,11 @@
         android:layout_gravity="bottom|end"
         android:src="@drawable/ic_compare_arrows_black_24dp"
         />
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:id="@+id/progress_bar"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

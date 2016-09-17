@@ -41,7 +41,7 @@ public class ConnectAPI {
 
 
     //Declared URLs
-    private final String fetchUrl = "http://54.186.169.29:1337/startups/food";
+    private final String fetchUrl = "http://54.186.169.29:1337/startups/";
 
     private AppController appController;
     private ServerAuthenticateListener mServerAuthenticateListener;
@@ -115,8 +115,9 @@ public class ConnectAPI {
 
     public void fetchMessages(String keyword) {
 
+        String url=fetchUrl+keyword;
         mServerAuthenticateListener.onRequestInitiated(COVERSATION_FETCH_CODE);
-        StringRequest postRequest = new StringRequest(Request.Method.GET, fetchUrl,
+        StringRequest postRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -177,7 +178,6 @@ public class ConnectAPI {
         void onRequestCompleted(int code, List<SearchResult> searchResultList);
 
         void onRequestError(int code, String message);
-
 
     }
 

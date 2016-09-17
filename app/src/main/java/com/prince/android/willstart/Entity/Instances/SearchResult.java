@@ -20,6 +20,7 @@ public class SearchResult {
     private String location;
     @SerializedName("dsc")
     private HashMap<String,String> descriptions;
+    @SerializedName("companies")
     private List<Company> companyList;
 
     public String getCategory() {
