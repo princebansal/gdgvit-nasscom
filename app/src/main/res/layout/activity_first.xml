@@ -16,7 +16,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:id="@+id/keyword"
-        android:transitionName="transitionReveal"
+        android:transitionName="transitionShow"
         android:textAlignment="center"
         android:fontFamily="sans-serif"
         android:layout_height="wrap_content"
@@ -28,6 +28,7 @@
         android:layout_height="30dp"
         android:background="@drawable/ic_chevron_right_black_24dp"
         android:id="@+id/imageButton"
+        android:onClick="onClick"
         />
 
 </LinearLayout>
