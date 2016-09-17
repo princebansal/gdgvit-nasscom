@@ -1,5 +1,6 @@
 package com.prince.android.willstart.Entity.Activities;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
     private Toolbar toolbar;
 
     private ConnectAPI connectApi;
+    private FloatingActionButton fabButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,7 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
         inputViewList=new ArrayList<>();
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         connectApi=new ConnectAPI();
+        fabButton=(FloatingActionButton)findViewById(R.id.fabBullet);
 
     }
 
@@ -58,6 +61,14 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
         getSupportActionBar().setTitle("Add Details");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         connectApi.setServerAuthenticateListener(this);
+        fabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                inputViewList.get(inputViewList.size()-1).getInputCheck().setChecked(true);
+                addInputView();
+            }
+        });
     }
 
 
@@ -77,6 +88,7 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
             connectApi.fetchSuggestions(phraseList,"foods");
         }
         return super.onOptionsItemSelected(item);
+
     }
 
     private void addInputView() {
@@ -109,6 +121,7 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
                 }
             }
         });
+        inputViewList.add(inputView);
         inputContainer.addView(v);
     }
 

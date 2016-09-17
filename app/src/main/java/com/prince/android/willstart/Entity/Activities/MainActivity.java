@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private FloatingActionButton fab;
     private ProgressBar progressBar;
     private CoordinatorLayout root;
-
+    private FloatingActionButton floatingActionButton;
     private List<Company> searchResultList;
 
     private ConnectAPI connectAPI;
@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         connectAPI = new ConnectAPI();
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         root=(CoordinatorLayout)findViewById(R.id.root);
+        floatingActionButton=(FloatingActionButton)findViewById(R.id.fab);
     }
 
     private void setInit() {
@@ -85,6 +86,14 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         connectAPI.setServerAuthenticateListener(this);
         setProgress(true);
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i= new Intent(MainActivity.this,ServicesInputActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     private void setProgress(boolean b) {
