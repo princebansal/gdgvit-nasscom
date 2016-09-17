@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,8 +16,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private SearchView searchView;
     private String keyword;
     private RecyclerView recyclerView;
+    private FloatingActionButton fab;
 
     private List<Company> searchResultList;
 
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private void init() {
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         recyclerView=(RecyclerView)findViewById(R.id.recycler_view);
+        fab=(FloatingActionButton)findViewById(R.id.fab);
     }
 
     private void setInit() {
@@ -91,7 +94,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
         searchResultList=list;
         recyclerView.setAdapter(new SearchResultsAdapter(this));
-    }
+
+        Animation hyperspaceJump = AnimationUtils.loadAnimation(this, R.anim.scale);
+        hyperspaceJump.setStartTime(500);
+        fab.startAnimation(hyperspaceJump);    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -125,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         Log.i(TAG, "handleIntent: ");
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            //Toast.makeText(this,query,Toast.LENGTH_SHORT).show();
             Log.i(TAG, "handleIntent: "+query);
             //use the query to search
         }
@@ -138,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     private void showMessage(String query) {
-        Toast.makeText(this,query,Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this,query,Toast.LENGTH_SHORT).show();
     }
 
     @Override
