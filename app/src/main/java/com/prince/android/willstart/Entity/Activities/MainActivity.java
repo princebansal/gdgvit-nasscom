@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -14,12 +16,19 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.prince.android.willstart.Entity.Instances.Company;
 import com.prince.android.willstart.Entity.Instances.SearchResult;
 import com.prince.android.willstart.R;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Prince Bansal Local on 9/17/2016.
@@ -34,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private String keyword;
     private RecyclerView recyclerView;
 
-    private List<SearchResult> searchResultList;
+    private List<Company> searchResultList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,11 +51,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         setContentView(R.layout.activity_main);
         init();
         setInit();
+        setData();
     }
 
     private void init() {
         toolbar=(Toolbar)findViewById(R.id.toolbar);
-
+        recyclerView=(RecyclerView)findViewById(R.id.recycler_view);
     }
 
     private void setInit() {
@@ -56,6 +66,31 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             keyword=getIntent().getStringExtra("keyword");
         }
         handleIntent(getIntent());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void setData() {
+        List<String> imageUrls=new ArrayList<>();
+        imageUrls.add("http://www.mobygames.com/images/i/22/36/1121436.png");
+        imageUrls.add("http://www.logospike.com/wp-content/uploads/2015/11/Company_Logos_01.jpg");
+        imageUrls.add("https://www.seeklogo.net/wp-content/uploads/2014/12/twitter-logo-vector-download.jpg");
+        imageUrls.add("http://www.mobygames.com/images/i/26/09/650109.png");
+        imageUrls.add("http://www.jamesgood.co.uk/sites/default/files/Logo-Blog_58.png");
+        List<String> names=new ArrayList<>();
+        names.add("NASA");
+        names.add("Dell");
+        names.add("Twitter");
+        names.add("EA Sports");
+        names.add("Starbucks");
+        List<Company> list=new ArrayList<>();
+        for(int i=0;i<5;i++){
+            Company c=new Company();
+            c.setPicUrl(imageUrls.get(i));
+            c.setName(names.get(i));
+            list.add(c);
+        }
+        searchResultList=list;
+        recyclerView.setAdapter(new SearchResultsAdapter(this));
     }
 
     @Override
@@ -90,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         Log.i(TAG, "handleIntent: ");
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            Toast.makeText(this,query,Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this,query,Toast.LENGTH_SHORT).show();
             Log.i(TAG, "handleIntent: "+query);
             //use the query to search
         }
@@ -115,26 +150,41 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.SearchViewHolder>{
 
 
+        private final Context context;
+
+        public SearchResultsAdapter(Context context) {
+            this.context=context;
+        }
+
         @Override
         public SearchResultsAdapter.SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return null;
-
+            View view=getLayoutInflater().inflate(R.layout.row_item,parent,false);
+            SearchViewHolder searchViewHolder=new SearchViewHolder(view);
+            return searchViewHolder;
         }
 
         @Override
         public void onBindViewHolder(SearchViewHolder holder, int position) {
-
+            holder.companyName.setText(searchResultList.get(position).getName());
+            Glide.with(context).load(searchResultList.get(position).getPicUrl()).asBitmap().into(holder.companyLogo);
         }
 
         @Override
         public int getItemCount() {
-            return 0;
+            return searchResultList.size();
         }
 
         public class SearchViewHolder extends RecyclerView.ViewHolder{
 
+            private CircleImageView companyLogo;
+            private TextView companyName;
+            private RecyclerView servicesRecycler;
+
             public SearchViewHolder(View itemView) {
                 super(itemView);
+                companyLogo=(CircleImageView)itemView.findViewById(R.id.companyLogo);
+                companyName=(TextView)itemView.findViewById(R.id.companyName);
+                servicesRecycler=(RecyclerView)itemView.findViewById(R.id.recViewFeatures);
             }
         }
     }
