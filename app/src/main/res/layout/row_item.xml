@@ -15,8 +15,8 @@
     >
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:id="@+id/companyLogo"
         android:src="@drawable/ic_chevron_right_black_24dp"
         />
