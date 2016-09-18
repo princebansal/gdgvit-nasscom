@@ -48,6 +48,7 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
     private String category;
     private CoordinatorLayout root;
     private SuggestionResult result;
+    private ArrayList<String> phraseList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +95,7 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==R.id.done){
-            List<String> phraseList=new ArrayList<>();
+            phraseList=new ArrayList<>();
             for(InputView iv:inputViewList){
                 String text=iv.getInputField().getText().toString();
                 if(!TextUtils.isEmpty(text))
@@ -150,10 +151,14 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
         if(code==ConnectAPI.FETCH_SUGGESTIONS_CODE) {
             Log.i(TAG, "onRequestCompleted: ");
             result = (SuggestionResult) searchResultList;
+            connectApi.fetchRecommend(phraseList,category);
         }
-        if(code==ConnectAPI.FETCH_RECOMMEND_CODE){
+        else if(code==ConnectAPI.FETCH_RECOMMEND_CODE){
             List<String> sugg=(List<String>)searchResultList;
             CharSequence[] arr=new CharSequence[sugg.size()];
+            for (int i = 0; i < sugg.size(); i++) {
+                arr[i]=sugg.get(i);
+            }
             Parcelable parcelable= Parcels.wrap(SuggestionResult.class,result);
             Intent intent=new Intent(this,ActivityAnalysis.class);
             intent.putExtra("results",parcelable);
