@@ -193,9 +193,7 @@ public class ActivityAnalysis extends AppCompatActivity {
         String per=successRateView.getText().toString();
 
         successRateView.setText(""+(mResults.getSuccessRate()+suggChecked));
-        tvTwitter.setText(""+mResults.getMean());
-        stats.setText(""+mResults.getPoorPercentage());
-        successRateView.setText(""+(mResults.getSuccessRate()+(suggChecked*2.5)));
+      
 
     }
 }
