@@ -36,7 +36,7 @@ public class ConnectAPI {
     //Constants
     public static final int FETCH_COMPANIES_CODE = 1;
     public static final int FETCH_SUGGESTIONS_CODE = 2;
-    public static final int FETCH_RECOMMEND_CODE = 2;
+    public static final int FETCH_RECOMMEND_CODE = 3;
     private static final String TAG = ConnectAPI.class.getSimpleName();
 
 
@@ -117,7 +117,6 @@ public class ConnectAPI {
                             /*List<String> suggestionResults = gson.fromJson(jsonObject.get("results").toString(), new TypeToken<List<String>>() {
                             }.getType());*/
                             mServerAuthenticateListener.onRequestCompleted(FETCH_SUGGESTIONS_CODE, suggestionResults);
-                            fetchRecommend(servicesList,category);
 
                         } catch (Exception e) {
                             e.printStackTrace();

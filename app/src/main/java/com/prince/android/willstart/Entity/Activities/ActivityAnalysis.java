@@ -65,6 +65,9 @@ public class ActivityAnalysis extends AppCompatActivity {
         rv=(RecyclerView)findViewById(R.id.recView);
         mResults= Parcels.unwrap(getIntent().getParcelableExtra("results"));
         featuresResult=getIntent().getCharSequenceArrayExtra("sugg");
+        for(CharSequence c:featuresResult){
+            Log.i(TAG, "init: cs:"+c);
+        }
         star1=(ImageView)findViewById(R.id.start1);
         star2=(ImageView)findViewById(R.id.start2);
         star3=(ImageView)findViewById(R.id.start3);
@@ -172,10 +175,10 @@ public class ActivityAnalysis extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!((CheckBox)v).isChecked()){
-                    suggChecked++;
+                    suggChecked--;
                     changeScore();
                 }else{
-                    suggChecked--;
+                    suggChecked++;
                     changeScore();
                 }
             }
@@ -184,6 +187,6 @@ public class ActivityAnalysis extends AppCompatActivity {
 
     private void changeScore() {
         String per=successRateView.getText().toString();
-        successRateView.setText(""+(mResults.getSuccessRate()+suggChecked));
+        successRateView.setText(""+(mResults.getSuccessRate()+(suggChecked*2.5)));
     }
 }
