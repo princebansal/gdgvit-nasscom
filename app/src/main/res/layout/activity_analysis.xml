@@ -22,8 +22,8 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
         android:id="@+id/nested_scroll"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -34,47 +34,49 @@
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                card_view:cardElevation="5dp"
-                android:layout_height="180dp">
+                android:layout_height="180dp"
+                card_view:cardElevation="5dp">
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:paddingBottom="20dp">
-                <ImageView
-                    android:id="@+id/start1"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="bottom"
-                    android:layout_marginLeft="50dp"
-                    android:src="@drawable/ic_star_greyed"/>
-
-                <ImageView
-
-                    android:id="@+id/start5"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-
-                    android:layout_gravity="bottom|right"
-                    android:layout_marginRight="50dp"
-
-                    android:src="@drawable/ic_star_greyed"/>
-
-                <ImageView
-
-                    android:id="@+id/start3"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="30dp"
-                    android:src="@drawable/ic_star_greyed"/>
 
                     <ImageView
-                    android:id="@+id/start4"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical|right"
-                    android:layout_marginRight="85dp"
-                    android:src="@drawable/ic_star_greyed"/>
+                        android:id="@+id/start1"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginLeft="50dp"
+                        android:src="@drawable/ic_star_greyed" />
+
+                    <ImageView
+
+                        android:id="@+id/start5"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+
+                        android:layout_gravity="bottom|right"
+                        android:layout_marginRight="50dp"
+
+                        android:src="@drawable/ic_star_greyed" />
+
+                    <ImageView
+
+                        android:id="@+id/start3"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="30dp"
+                        android:src="@drawable/ic_star_greyed" />
+
+                    <ImageView
+                        android:id="@+id/start4"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical|right"
+                        android:layout_marginRight="85dp"
+                        android:src="@drawable/ic_star_greyed" />
 
                     <ImageView
                         android:id="@+id/start2"
@@ -82,18 +84,19 @@
                         android:layout_height="40dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="85dp"
-                        android:src="@drawable/ic_star_greyed"/>
+                        android:src="@drawable/ic_star_greyed" />
                 </FrameLayout>
+
                 <TextView
+                    android:id="@+id/success_rate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="75%"
-                    android:textSize="25sp"
-                    android:id="@+id/success_rate"
                     android:layout_gravity="bottom|center_horizontal"
                     android:layout_marginBottom="30dp"
+                    android:fontFamily="cursive"
+                    android:text="75%"
                     android:textColor="@color/black"
-                    android:fontFamily="cursive"/>
+                    android:textSize="25sp" />
 
             </android.support.v7.widget.CardView>
 
@@ -101,42 +104,58 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:padding="16dp"
-                >
+                android:padding="16dp">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
+                    android:layout_gravity="center_vertical"
                     android:orientation="horizontal"
-                    >
-                    <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="70dp"
-                        android:src="@drawable/ic_twitter"
-                        android:layout_gravity="center"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
+                    android:padding="16dp"
+                    android:weightSum="100">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="This is twitter"
-                        android:id="@+id/twitterText"
-                        android:layout_gravity="center"
-                        />
+                        android:layout_weight="50"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_twitter" />
+
+                        <TextView
+                            android:id="@+id/twitterText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textSize="21sp"
+                            android:layout_marginLeft="10dp"
+                            android:text="This is twitter" />
+                    </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="50"
+                    android:gravity="center">
                     <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="70dp"
-                        android:src="@drawable/ic_statsagain"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center"
-                        />
+                        android:src="@drawable/ic_statsagain" />
+
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Stats"
                         android:id="@+id/stats"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        />
+                        android:textSize="21sp"
+                        android:layout_marginLeft="10dp"
+                        android:text="Stats" />
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -146,17 +165,17 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Suggestions"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:textStyle="bold"
+                android:fontFamily="sans-serif-condensed"
                 android:padding="15dp"
-                android:fontFamily="sans-serif-condensed"/>
+                android:text="Suggestions"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <android.support.v7.widget.RecyclerView
+                android:id="@+id/recView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/recView">
+                android:layout_height="wrap_content">
 
 
             </android.support.v7.widget.RecyclerView>
@@ -164,9 +183,7 @@
         </LinearLayout>
 
 
-
     </android.support.v4.widget.NestedScrollView>
-
 
 
 </android.support.design.widget.CoordinatorLayout>

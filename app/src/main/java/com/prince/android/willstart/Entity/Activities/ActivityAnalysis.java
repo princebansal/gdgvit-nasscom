@@ -26,6 +26,7 @@ import com.prince.android.willstart.R;
 import org.json.JSONArray;
 import org.parceler.Parcels;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -38,7 +39,7 @@ import java.util.regex.Pattern;
 public class ActivityAnalysis extends AppCompatActivity {
 
     private RecyclerView rv;
-    private TextView successRateView;
+    private TextView successRateView,twitter,stats;
     private ImageView star1,star2,star3,star4,star5;
     private ImageView[] starsViewArray;
     private NestedScrollView nestedScrollView;
@@ -75,6 +76,8 @@ public class ActivityAnalysis extends AppCompatActivity {
         star5=(ImageView)findViewById(R.id.start5);
         nestedScrollView=(NestedScrollView)findViewById(R.id.nested_scroll);
         successRateView=(TextView)findViewById(R.id.success_rate);
+        twitter=(TextView)findViewById(R.id.twitterText);
+        stats=(TextView)findViewById(R.id.stats);
         starsViewArray=new ImageView[5];
         starsViewArray[0]=star1;
         starsViewArray[1]=star2;
@@ -119,6 +122,8 @@ public class ActivityAnalysis extends AppCompatActivity {
                nestedScrollView.fullScroll(Gravity.TOP);
             }
         },0);
+        twitter.setText(mResults.getMean()+"");
+        stats.setText(mResults.getPoorPercentage()+"");
 
     }
 
@@ -152,6 +157,7 @@ public class ActivityAnalysis extends AppCompatActivity {
                 holder.suggestion.setText(featuresResult[position]);
             }else{
                 holder.suggestion.setText(mResults.getSuggestions().get(position-featuresResult.length));
+                holder.addCheck.setChecked(true);
             }
 
         }
@@ -187,6 +193,7 @@ public class ActivityAnalysis extends AppCompatActivity {
 
     private void changeScore() {
         String per=successRateView.getText().toString();
-        successRateView.setText(""+(mResults.getSuccessRate()+(suggChecked*2.5)));
+        DecimalFormat format=new DecimalFormat("#.##");
+        successRateView.setText(""+format.format(mResults.getSuccessRate()+(suggChecked*2.5)));
     }
 }
