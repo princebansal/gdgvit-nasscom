@@ -8,4 +8,5 @@
     <color name="black">#000000</color>
     <color name="win_bg">#f1f1f1</color>
     <color name="gray">#A2000000</color>
+    <color name="light_gray">#23000000</color>
 </resources>

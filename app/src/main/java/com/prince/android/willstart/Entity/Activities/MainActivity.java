@@ -1,19 +1,23 @@
 package com.prince.android.willstart.Entity.Activities;
 
+import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -56,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private ConnectAPI connectAPI;
     private SearchResultsAdapter adapter;
     private String mQuery;
+    private SearchResult searchResult;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             @Override
             public void onClick(View view) {
                 Intent i= new Intent(MainActivity.this,ServicesInputActivity.class);
+                i.putExtra("category",mQuery);
                 startActivity(i);
             }
         });
@@ -205,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         setProgress(false);
         List<SearchResult> list=(List<SearchResult>)searchResultList;
         this.searchResultList=list.get(0).getCompanyList();
+        searchResult=list.get(0);
         setData();
     }
 
@@ -297,6 +304,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                     builder.append(String.valueOf(arr[i].charAt(0)).toUpperCase()+arr[i].substring(1));
                 }
             }
+            if(searchResult.getDescriptions().containsKey(feat)){
+                holder.featureName.setTextColor(ContextCompat.getColor(context,R.color.colorPrimary));
+            }
             holder.featureName.setText(builder.toString());
 
         }
@@ -306,13 +316,29 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             return featuresList.size();
         }
 
-        public class ServiceViewHolder extends RecyclerView.ViewHolder {
+        public class ServiceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             private TextView featureName;
 
             public ServiceViewHolder(View itemView) {
                 super(itemView);
                 featureName = (TextView) itemView.findViewById(R.id.featureName);
+                itemView.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                if(searchResult!=null){
+                    if(searchResult.getDescriptions().containsKey(featuresList.get(getAdapterPosition()))){
+                        final Dialog dialog = new Dialog(context);
+                        // Include dialog.xml file
+                        dialog.setContentView(R.layout.alert_dialog_view);
+
+                        TextView text = (TextView) dialog.findViewById(R.id.alertText);
+                        text.setText(searchResult.getDescriptions().get(featuresList.get(getAdapterPosition())));
+                        dialog.show();
+                    }
+                }
             }
         }
     }

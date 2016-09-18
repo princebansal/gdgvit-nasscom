@@ -138,7 +138,7 @@ public class ConnectAPI {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                error.printStackTrace();
                 Log.v("err", "error");
                 mServerAuthenticateListener.onRequestError(FETCH_COMPANIES_CODE, error.getMessage());
             }
@@ -152,7 +152,7 @@ public class ConnectAPI {
 
     public void fetchSuggestions(final List<String> servicesList,String category){
 
-        String url=fetchUrl+category;
+        String url=suggestionsUrl+category;
         mServerAuthenticateListener.onRequestInitiated(FETCH_SUGGESTIONS_CODE);
         StringRequest postRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -177,7 +177,7 @@ public class ConnectAPI {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                error.printStackTrace();
                 Log.v("err", "error");
                 mServerAuthenticateListener.onRequestError(FETCH_SUGGESTIONS_CODE, error.getMessage());
             }

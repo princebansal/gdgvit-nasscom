@@ -37,6 +37,8 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
 
     private ConnectAPI connectApi;
     private FloatingActionButton fabButton;
+
+    private String category;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +54,7 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         connectApi=new ConnectAPI();
         fabButton=(FloatingActionButton)findViewById(R.id.fabBullet);
-
+        category=getIntent().hasExtra("category")?getIntent().getStringExtra("category"):"";
     }
 
     private void setInit() {
@@ -85,7 +87,7 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
             for(InputView iv:inputViewList){
                 phraseList.add(iv.getInputField().getText().toString());
             }
-            connectApi.fetchSuggestions(phraseList,"foods");
+            connectApi.fetchSuggestions(phraseList,category);
         }
         return super.onOptionsItemSelected(item);
 
