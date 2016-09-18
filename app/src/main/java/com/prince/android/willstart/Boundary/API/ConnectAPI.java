@@ -96,7 +96,7 @@ public class ConnectAPI {
         AppController.getInstance().addToRequestQueue(postRequest);
     }
 
-    public void fetchSuggestions(final List<String> servicesList,String category){
+    public void fetchSuggestions(final List<String> servicesList, final String category){
 
         String url=suggestionsUrl+category;
         try {
@@ -112,13 +112,12 @@ public class ConnectAPI {
                     public void onResponse(String response) {
                         Log.v("response", response);
                         try {
-                             JSONObject jsonObject=new JSONObject(response);
-                            Gson gson = new Gson();
+                             Gson gson = new Gson();
                             SuggestionResult suggestionResults = gson.fromJson(response, SuggestionResult.class);
                             /*List<String> suggestionResults = gson.fromJson(jsonObject.get("results").toString(), new TypeToken<List<String>>() {
                             }.getType());*/
                             mServerAuthenticateListener.onRequestCompleted(FETCH_SUGGESTIONS_CODE, suggestionResults);
-
+                            fetchRecommend(servicesList,category);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -157,7 +156,7 @@ public class ConnectAPI {
             e.printStackTrace();
         }
         Log.i(TAG, "fetchRecommendations: "+url);
-        mServerAuthenticateListener.onRequestInitiated(FETCH_SUGGESTIONS_CODE);
+        mServerAuthenticateListener.onRequestInitiated(FETCH_RECOMMEND_CODE);
         StringRequest postRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -169,7 +168,7 @@ public class ConnectAPI {
                             //SuggestionResult suggestionResults = gson.fromJson(response, SuggestionResult.class);
                             List<String> suggestionResults = gson.fromJson(jsonObject.get("result").toString(), new TypeToken<List<String>>() {
                             }.getType());
-                            mServerAuthenticateListener.onRequestCompleted(FETCH_SUGGESTIONS_CODE, suggestionResults);
+                            mServerAuthenticateListener.onRequestCompleted(FETCH_RECOMMEND_CODE, suggestionResults);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -181,7 +180,7 @@ public class ConnectAPI {
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
                 Log.v("err", "error");
-                mServerAuthenticateListener.onRequestError(FETCH_SUGGESTIONS_CODE, error.getMessage());
+                mServerAuthenticateListener.onRequestError(FETCH_RECOMMEND_CODE, error.getMessage());
             }
         }){
             @Override

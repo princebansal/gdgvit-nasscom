@@ -47,6 +47,7 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
 
     private String category;
     private CoordinatorLayout root;
+    private SuggestionResult result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,12 +147,20 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
 
     @Override
     public void onRequestCompleted(int code, Object searchResultList) {
-        Log.i(TAG, "onRequestCompleted: ");
-        SuggestionResult result=(SuggestionResult) searchResultList;
-        Parcelable parcelable= Parcels.wrap(SuggestionResult.class,result);
-        Intent intent=new Intent(this,ActivityAnalysis.class);
-        intent.putExtra("results",parcelable);
-        startActivity(intent);
+        if(code==ConnectAPI.FETCH_SUGGESTIONS_CODE) {
+            Log.i(TAG, "onRequestCompleted: ");
+            result = (SuggestionResult) searchResultList;
+        }
+        if(code==ConnectAPI.FETCH_RECOMMEND_CODE){
+            List<String> sugg=(List<String>)searchResultList;
+            CharSequence[] arr=new CharSequence[sugg.size()];
+            Parcelable parcelable= Parcels.wrap(SuggestionResult.class,result);
+            Intent intent=new Intent(this,ActivityAnalysis.class);
+            intent.putExtra("results",parcelable);
+            intent.putExtra("sugg",arr);
+            startActivity(intent);
+        }
+
     }
 
     @Override
