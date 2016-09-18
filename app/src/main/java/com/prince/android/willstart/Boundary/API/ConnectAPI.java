@@ -24,6 +24,8 @@ import com.prince.android.willstart.Entity.Instances.SuggestionResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,12 +36,14 @@ public class ConnectAPI {
     //Constants
     public static final int FETCH_COMPANIES_CODE = 1;
     public static final int FETCH_SUGGESTIONS_CODE = 2;
+    public static final int FETCH_RECOMMEND_CODE = 2;
     private static final String TAG = ConnectAPI.class.getSimpleName();
 
 
     //Declared URLs
     private final String fetchUrl = "http://54.186.169.29:1337/startups/";
     private final String suggestionsUrl="http://54.186.169.29:1337/startups/features/";
+    private final String recommendUrl="http://54.186.169.29:1337/startups/score/";
 
     private AppController appController;
     private ServerAuthenticateListener mServerAuthenticateListener;
@@ -51,64 +55,6 @@ public class ConnectAPI {
         dataHandler = DataHandler.getInstance(appController.getApplicationContext());
     }
 
-    /*public void refresh() {
-        if (mServerAuthenticateListener != null) {
-            mServerAuthenticateListener.onRequestInitiated(FETCH_COMPANIES_CODE);
-            StringRequest stringRequest = new StringRequest(Request.Method.GET,
-                    fetchUrl.trim(), new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    if (response != null) {
-
-                        Log.d("refresh", "response");
-
-                        if (validateResponse(response)) {
-                            try {
-                                JSONObject jsonObject = new JSONObject(response);
-                                Gson gson = new Gson();
-                                ArrayList<Message> messageList = gson.fromJson(jsonObject.getJSONArray("messages").toString(), new TypeToken<ArrayList<Message>>() {}.getType());
-                                dataHandler.saveConversation(messageList);
-                                mServerAuthenticateListener.onRequestCompleted(FETCH_COMPANIES_CODE);
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-                        } else {
-                            mServerAuthenticateListener.onRequestError(FETCH_COMPANIES_CODE, ErrorDefinitions.ERROR_RESPONSE_INVALID);
-                        }
-
-                    } else {
-                        mServerAuthenticateListener.onRequestError(FETCH_COMPANIES_CODE, ErrorDefinitions.ERROR_RESPONSE_NULL);
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
-                    mServerAuthenticateListener.onRequestError(FETCH_COMPANIES_CODE, error.getMessage());
-                }
-            }) {
-
-                @Override
-                protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                    Log.i(TAG, "parseNetworkResponse: " + response.toString());
-                    return super.parseNetworkResponse(response);
-                }
-
-                @Override
-                protected VolleyError parseNetworkError(VolleyError volleyError) {
-                    Log.i(TAG, "parseNetworkError: " + volleyError.getCause());
-                    ;
-                    return super.parseNetworkError(volleyError);
-                }
-            };
-            stringRequest.setRetryPolicy(new DefaultRetryPolicy(16000,
-                    2,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            appController.addToRequestQueue(stringRequest, "refreshrequest");
-        } else {
-            return;
-        }
-    }*/
 
 
     public void fetchMessages(String keyword) {
@@ -153,8 +99,14 @@ public class ConnectAPI {
     public void fetchSuggestions(final List<String> servicesList,String category){
 
         String url=suggestionsUrl+category;
+        try {
+            url=url+"?services="+ URLEncoder.encode(new Gson().toJson(servicesList,new TypeToken<List<String>>(){}.getType()),"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, "fetchSuggestions: "+url);
         mServerAuthenticateListener.onRequestInitiated(FETCH_SUGGESTIONS_CODE);
-        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+        StringRequest postRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -162,12 +114,62 @@ public class ConnectAPI {
                         try {
                              JSONObject jsonObject=new JSONObject(response);
                             Gson gson = new Gson();
-                            //List<SuggestionResult> suggestionResults = gson.fromJson(response, new TypeToken<List<SuggestionResult>>() {}.getType());
-                            List<String> suggestionResults = gson.fromJson(jsonObject.get("results").toString(), new TypeToken<List<String>>() {
-                            }.getType());
+                            SuggestionResult suggestionResults = gson.fromJson(response, SuggestionResult.class);
+                            /*List<String> suggestionResults = gson.fromJson(jsonObject.get("results").toString(), new TypeToken<List<String>>() {
+                            }.getType());*/
                             mServerAuthenticateListener.onRequestCompleted(FETCH_SUGGESTIONS_CODE, suggestionResults);
 
 
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                Log.v("err", "error");
+                mServerAuthenticateListener.onRequestError(FETCH_SUGGESTIONS_CODE, error.getMessage());
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> map=new HashMap<>();
+                map.put("services",new Gson().toJson(servicesList,new TypeToken<List<String>>(){}.getType()));
+                return map;
+            }
+        };
+
+        // Adding request to request queue
+        RetryPolicy policy = new DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        postRequest.setRetryPolicy(policy);
+        AppController.getInstance().addToRequestQueue(postRequest);
+    }
+
+    public void fetchRecommend(final List<String> servicesList,String category){
+
+        String url=recommendUrl+category;
+        try {
+            url=url+"?services="+ URLEncoder.encode(new Gson().toJson(servicesList,new TypeToken<List<String>>(){}.getType()),"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, "fetchRecommendations: "+url);
+        mServerAuthenticateListener.onRequestInitiated(FETCH_SUGGESTIONS_CODE);
+        StringRequest postRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.v("response", response);
+                        try {
+                            JSONObject jsonObject=new JSONObject(response);
+                            Gson gson = new Gson();
+                            //SuggestionResult suggestionResults = gson.fromJson(response, SuggestionResult.class);
+                            List<String> suggestionResults = gson.fromJson(jsonObject.get("result").toString(), new TypeToken<List<String>>() {
+                            }.getType());
+                            mServerAuthenticateListener.onRequestCompleted(FETCH_SUGGESTIONS_CODE, suggestionResults);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

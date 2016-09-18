@@ -1,6 +1,10 @@
 package com.prince.android.willstart.Entity.Activities;
 
+import android.content.Intent;
+import android.os.Parcelable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,7 +26,10 @@ import android.widget.TextView;
 
 import com.prince.android.willstart.Boundary.API.ConnectAPI;
 import com.prince.android.willstart.Entity.Instances.InputView;
+import com.prince.android.willstart.Entity.Instances.SuggestionResult;
 import com.prince.android.willstart.R;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +46,8 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
     private FloatingActionButton fabButton;
 
     private String category;
+    private CoordinatorLayout root;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +59,7 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
 
     private void init() {
         inputContainer=(LinearLayout)findViewById(R.id.innerLinearLayout);
+        root=(CoordinatorLayout)findViewById(R.id.root);
         inputViewList=new ArrayList<>();
         toolbar=(Toolbar)findViewById(R.id.toolbar);
         connectApi=new ConnectAPI();
@@ -85,7 +95,9 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
         if(item.getItemId()==R.id.done){
             List<String> phraseList=new ArrayList<>();
             for(InputView iv:inputViewList){
-                phraseList.add(iv.getInputField().getText().toString());
+                String text=iv.getInputField().getText().toString();
+                if(!TextUtils.isEmpty(text))
+                phraseList.add(text);
             }
             connectApi.fetchSuggestions(phraseList,category);
         }
@@ -135,12 +147,20 @@ public class ServicesInputActivity extends AppCompatActivity implements ConnectA
     @Override
     public void onRequestCompleted(int code, Object searchResultList) {
         Log.i(TAG, "onRequestCompleted: ");
-        List<String> results=(List<String>)searchResultList;
-        Log.i(TAG, "onRequestCompleted: "+results.toString());
+        SuggestionResult result=(SuggestionResult) searchResultList;
+        Parcelable parcelable= Parcels.wrap(SuggestionResult.class,result);
+        Intent intent=new Intent(this,ActivityAnalysis.class);
+        intent.putExtra("results",parcelable);
+        startActivity(intent);
     }
 
     @Override
     public void onRequestError(int code, String message) {
         Log.i(TAG, "onRequestError: ");
+        showMessage("Network error");
+    }
+
+    private void showMessage(String s) {
+        Snackbar.make(root,s,Snackbar.LENGTH_SHORT).show();
     }
 }
