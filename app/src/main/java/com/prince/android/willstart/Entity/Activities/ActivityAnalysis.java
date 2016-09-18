@@ -47,6 +47,7 @@ public class ActivityAnalysis extends AppCompatActivity {
     private ArrayList<String> suggestions;
     private int suggChecked=0;
     private SuggestionResult mResults;
+    private CharSequence[] featuresResult;
     private Toolbar toolbar;
     private String TAG=ActivityAnalysis.class.getSimpleName();
 
@@ -63,6 +64,7 @@ public class ActivityAnalysis extends AppCompatActivity {
     private void init() {
         rv=(RecyclerView)findViewById(R.id.recView);
         mResults= Parcels.unwrap(getIntent().getParcelableExtra("results"));
+        featuresResult=getIntent().getCharSequenceArrayExtra("sugg");
         star1=(ImageView)findViewById(R.id.start1);
         star2=(ImageView)findViewById(R.id.start2);
         star3=(ImageView)findViewById(R.id.start3);
@@ -143,13 +145,17 @@ public class ActivityAnalysis extends AppCompatActivity {
         @Override
         public void onBindViewHolder(MyView holder, int position) {
 
-            holder.suggestion.setText(mResults.getSuggestions().get(position));
+            if(position<featuresResult.length) {
+                holder.suggestion.setText(featuresResult[position]);
+            }else{
+                holder.suggestion.setText(mResults.getSuggestions().get(position-featuresResult.length));
+            }
 
         }
 
         @Override
         public int getItemCount() {
-            return mResults.getSuggestions().size();
+            return mResults.getSuggestions().size()+featuresResult.length;
         }
 
         public class MyView extends RecyclerView.ViewHolder implements View.OnClickListener {
