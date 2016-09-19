@@ -43,7 +43,7 @@ public class ActivityAnalysis extends AppCompatActivity {
     private ImageView star1,star2,star3,star4,star5;
     private ImageView[] starsViewArray;
     private NestedScrollView nestedScrollView;
-
+    private TextView tvTwitter;
     private RecyclerViewAdapter adapter;
     private ArrayList<String> suggestions;
     private int suggChecked=0;
@@ -63,6 +63,9 @@ public class ActivityAnalysis extends AppCompatActivity {
     }
 
     private void init() {
+
+        tvTwitter=(TextView)findViewById(R.id.twitterText);
+        stats=(TextView)findViewById(R.id.stats);
         rv=(RecyclerView)findViewById(R.id.recView);
         mResults= Parcels.unwrap(getIntent().getParcelableExtra("results"));
         featuresResult=getIntent().getCharSequenceArrayExtra("sugg");
